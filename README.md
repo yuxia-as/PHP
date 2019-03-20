@@ -1,3 +1,2 @@
 # PHP
-These are two simple projects I created with php oop.
-A full website for rental application will be completed with php at the end of this semester.
+This is an rental application developed with PHP OOP. It’s still in process and will be updated later. Please see the introduction.mp4 for details.
