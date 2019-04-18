@@ -1,32 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Document</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	<style>
-		.card span{
-			padding:0 15px;
-		}
-		.card a{
-			text-decoration: none;
-		}
-		.form-group label,legend{
-			font-weight: normal;
-		}
-	</style>
-</head>
-<body>
-<?php
-include_once('data.php');
+<?php 
+
+include_once("nav.php");
+
+include_once('getData.php');
+
 if(isset($_GET['id'])){
 	$id = $_GET['id'];
-	foreach($data as $line_arr){
-	if($line_arr['index'] == $id)
-		$property = $line_arr;
+	foreach($rows as $row){
+	if($row['id'] == $id)
+		$property = $row;
 	}
 	$address = $property['address'];
 	$address_arr = explode(',',$address);
@@ -37,43 +19,10 @@ if(isset($_GET['id'])){
 	 
 }
 ?>	
-<div class="container">
-	<!--top Nav part -->
-		<nav class="navbar navbar-expand-lg navbar-dark bg-primary" role="navigation">
-		  <a class="navbar-brand" href="index.php">Rent.com</a>
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-		    <span class="navbar-toggler-icon"></span>
-		  </button>
 
-		  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-		    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-		      <li class="nav-item active">
-		        <a class="nav-link" href="/index.php"><strong>House</strong><span class="sr-only">(current)</span></a>
-		      </li>
-		      <li class="nav-item">
-		        <a class="nav-link" href="#"><strong>Aparment</strong></a>
-		      </li>
-		      
-		    </ul>
-		    
-		    <div class="nav-right">
-		    	<ul class="navbar-nav">
-			      <li class="nav-item active">
-			        <a class="nav-link" href="#"><strong>Sign Up</strong></a>
-			      </li>
-			      <li class="nav-item active">
-			        <a class="nav-link" href="#"><strong>Sign In<strong></a>
-			      </li>
-			      <li class="nav-item active">
-			        <a class="nav-link" href="#"><strong>Upload-Property<strong></a>
-			      </li>      
-			    </ul>
-		    </div>
-		  </div>
-		</nav>
-	<!-- upload forwm area -->
+	<!-- upload form area -->
 		<div style="margin-top:20px;">
-			<form method="post" action="data.php" enctype="multipart/form-data">
+			<form method="post" action="getData.php" enctype="multipart/form-data">
 				<input type="hidden" name="id" value="<?php echo(!empty($id)) ? $id : ''; ?>" />		 
 			  <div class="form-group">
 			    <label for="inputAddress">Address*</label>
@@ -117,6 +66,7 @@ if(isset($_GET['id'])){
 			        <option value="4 Beds" <?php if(!empty($property['beds'])&& "4 Beds"==trim($property['beds'])) echo "selected" ?> >4 Beds</option>
 			      </select>
 			    </div>
+
 			    <div class="form-group col-md-3">
 			      <label for="inputBath">Bath Room</label>
 			      <select id="inputBath" name="inputBath" class="form-control">
@@ -141,7 +91,7 @@ if(isset($_GET['id'])){
 					  <label class="form-check-label" for="house">Single Family Home</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<span id="msg" style="color:red;"></span>
+						<span id="msgCheck" style="color:red;"></span>
 					</div>
 			  	  </div>
 			  </div>
@@ -156,24 +106,25 @@ if(isset($_GET['id'])){
 					  <div class="custom-file">
 					    <input type="file" class="custom-file-input" id="inputGroupFile" name="inputGroupFile" aria-describedby="inputGroupFileAddon01">
 					    <label class="custom-file-label" for="inputGroupFile">Choose file</label>
-					  </div>
-				    
+					  </div>				    
 				  </div>
 			  	  </div>
-			  </div>
+			  	  <div class="row">
+			  	  	<div class="col-md-3"></div><div class="col-md-9"><span id="msgFile" style="color:red;"></span></div>
+			  	  </div>
+			  
 			</fieldset>
 			  
 			  <div class="form-group">
 			    <label for="inputDesp">Description*</label>
-			    <textarea  class="form-control" id="inputDesp" name="inputDesp" placeholder="Please enter property description here..." required> <?php echo (!empty($property)) ? $property['description'] :'' ?></textarea>
+			    <textarea  class="form-control" id="inputDesp" name="inputDesp" rows="5" placeholder="Please enter property description here..." required> <?php echo (!empty($property)) ? $property['description'] :'' ?></textarea>
 			  </div>
 			  <button type="submit" class="btn btn-primary">Submit</button>
 			</form>
 		</div>
-		
-</div>
-<script type="text/javascript">	
 
+<script type="text/javascript">	
+	
 	$('.form-check-input').each(function(){
 		$(this).click(function(){
 			if($(this).is(':checked')){
@@ -192,6 +143,7 @@ if(isset($_GET['id'])){
         $(this).next('.custom-file-label').html(fileName);
     })
     $('button').click(function(e){
+    	//check if select a property type
     	var $check=false;
     	$('.form-check-input').each(function(){
     		if($(this).is(':checked')){
@@ -199,12 +151,24 @@ if(isset($_GET['id'])){
     		}
     	})
     	if(!$check) {
-    		$('#msg').text('Please select a property type.');
+    		$('#msgCheck').text('Please select a property type.');
     		e.preventDefault();
     		return false;
+    	}else{
+    		$('#msgCheck').html('');
     	}
+    	//check if upload a file
+    	var fileLen = $('#inputGroupFile')[0].files.length;
+    	if(fileLen==0){
+    		console.log("file=0");
+    		$('#msgFile').text('Please Upload an image file.');
+    		e.preventDefault();
+    		return false;
+    	}else{
+    		$('#msgFile').html('');
+    	}
+
     })	
 </script>	
 	
-</body>
-</html>
+<?php include_once("footer.php");	?>

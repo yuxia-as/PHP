@@ -1,57 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Document</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
-	<style>
-		.card span{
-			padding:0 15px;
-		}
-		.card a{
-			text-decoration: none;
-		}
-	</style>
-</head>
-<body>
-	
-<div class="container">
-	<!--top Nav part -->
-		<nav class="navbar navbar-expand-lg navbar-dark bg-primary" role="navigation">
-		  <a class="navbar-brand" href="index.php">Rent.com</a>
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-		    <span class="navbar-toggler-icon"></span>
-		  </button>
 
-		  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-		    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-		      <li class="nav-item active">
-		        <a class="nav-link" href="/index.php"><strong>House</strong><span class="sr-only">(current)</span></a>
-		      </li>
-		      <li class="nav-item">
-		        <a class="nav-link" href="#"><strong>Aparment</strong></a>
-		      </li>
-		      
-		    </ul>
-		    
-		    <div class="nav-right">
-		    	<ul class="navbar-nav">
-			      <li class="nav-item active">
-			        <a class="nav-link" href="#"><strong>Sign Up</strong></a>
-			      </li>
-			      <li class="nav-item active">
-			        <a class="nav-link" href="#"><strong>Sign In<strong></a>
-			      </li>
-			      <li class="nav-item active">
-			        <a class="nav-link" href="upload.php"><strong>Upload-Property<strong></a>
-			      </li>      
-			    </ul>
-		    </div>
-		  </div>
-		</nav>
+	<?php include_once("nav.php");	?>
+
 	<!-- search area -->
 		<div style="margin-top:6px;">
 			<form action="" class="form-inline">
@@ -76,22 +25,24 @@
 		</div>
 		
 		<!-- property list area -->
+		
 		<div class="row" style="margin-top:15px;"> 
 			<?php
-				include_once("class.php");
+				include_once("getData.php");
 
-				foreach($data as $value){
+				foreach($rows as $row){
 					$property = new SingleProperty;
-					$property->printProperty($value);
+					$property->printProperty($row);
 				}
 			?>
 		</div>
-			
-		
-	</div>
-	<script>
 
-	</script>
-	
-</body>
-</html>
+		<script>
+			//delete property
+			$('.btn-delete').on('click',function(){
+				$id = $(this).attr("data-id");
+			})
+		</script>
+			
+	<?php include_once("footer.php");	?>	
+
