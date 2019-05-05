@@ -51,8 +51,17 @@ class Rent{
 		}
 	}
 }
-class SingleProperty extends Rent{	
-	public function printProperty($arr){
+class SingleProperty extends Rent{
+	public function printAllProperty($arr){
+		$this->assignValue($arr);		
+		echo '<div class="col-md-6" style="margin-top:20px;"><div class="card" >';
+		echo '<a href="detail.php?id='.$this->id.'"><img src="'.$this->img.'" class="card-img-top" width="100%" height="426"  alt="...">
+				  <h5 class="card-title text-center">
+				    <span>'.$this->beds.' '.$this->bath.'</span><span>'.$this->size.' sqft</span> <span>'.$this->type.'</span>
+				  </h5></a>';
+		echo "</div></div>";
+	}	
+	public function printOwnProperty($arr){
 		$this->assignValue($arr);		
 		echo '<div class="col-md-6" style="margin-top:20px;"><div class="card" >';
 		echo '<a href="detail.php?id='.$this->id.'"><img src="'.$this->img.'" class="card-img-top" width="100%" height="426"  alt="...">
@@ -147,27 +156,22 @@ class User{
 		if(!$this->checkUser($email)){
 			$stmt = $this->db->getConnection()->prepare("INSERT INTO `users`(`name`, `email`, `phone`, `password`) VALUES (?,?,?,?)");
 			if($stmt->execute(array($name,$email,$phone,$password))){
-				$res = '{"result":true,"name":"'.$name.'"}';
+				$error = null;
 			}else{
-				$res = '{"result":false,"msg":"System error occurs."}';
+				$error = "System error, cannot sign up for now.";
 				
 			}
 		}else{
-			$res = '{"result":false,"msg":"This email has been registed."}';			
+			$error = "This email has been registed.";			
 		}
-		return $res;
+		return $error;
 	}
+	
 	//retrieve user name by logging in with email and password
-	public function queryUser($email,$password){
-		$stmt = $this->db->getConnection()->prepare("SELECT name FROM `users` WHERE email=? AND password=?");
-		$stmt->execute(array($email,$password));
-		$name = $stmt->fetchColumn();
-		//if find a name
-		if($name){
-			$res = '{"result":true,"name":"'.$name.'"}';
-		}else{
-			$res = '{"result":false,"msg":"This email or password is not correct."}';
-		}
+	public function queryUser($email){
+		$stmt = $this->db->getConnection()->prepare("SELECT name,password,id FROM `users` WHERE email=?");
+		$stmt->execute(array($email));
+		$res = $stmt->fetchAll();
 		return $res;
 	}
 }
@@ -181,6 +185,13 @@ class Property{
 	//retrieve all properties information
 	public function getProperties(){
 		$stmt = $this->db->getConnection()->query("SELECT * FROM `properties`");
+		$rows = $stmt->fetchAll();
+		return $rows;
+	}
+	//retrieve properties information based on user id
+	public function getOwnProperties($id){
+		$stmt = $this->db->getConnection()->prepare("SELECT * FROM `properties` WHERE user_id = ?");
+		$stmt->execute(array($id));
 		$rows = $stmt->fetchAll();
 		return $rows;
 	}
@@ -202,6 +213,13 @@ class Property{
 			return false;
 		}
 	}
+	//find img address
+	public function getImg($id){
+		$stmt = $this->db->getConnection()->prepare("SELECT img_address FROM `properties` WHERE id=?");
+		$stmt->execute(array($id));
+		$img = $stmt->fetchColumn();
+		return $img;
+	}
 	//delete a property
 	public function deleteProperty($id){
 		$stmt = $this->db->getConnection()->prepare("DELETE FROM `properties` WHERE id=?");
@@ -210,6 +228,28 @@ class Property{
 		}else{
 			return false;
 		}
+	}
+
+	//get all house properties
+	public function getHouse(){
+		$stmt = $this->db->getConnection()->query('SELECT * FROM `properties` WHERE type = "Single Family Home"');
+		$rows = $stmt->fetchAll();
+		return $rows;
+	}
+	//get all apartment properties
+	public function getApartment(){
+		$stmt = $this->db->getConnection()->query('SELECT * FROM `properties` WHERE type = "Apartment"');
+		$rows = $stmt->fetchAll();
+		return $rows;
+	}
+
+	//search properties
+	public function searchProperty($city,$rent_low,$rent_high,$beds,$bath){
+		$stmt = $this->db->getConnection()->prepare('SELECT * FROM `properties` WHERE LOWER(address) LIKE ? AND rent between ? and ? AND beds=? AND bath=?');
+		$city = "%$city%";
+		$stmt->execute(array($city,$rent_low,$rent_high,$beds,$bath));
+		$rows = $stmt->fetchAll();
+		return $rows;
 	}
 
 }

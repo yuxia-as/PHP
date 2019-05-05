@@ -1,0 +1,22 @@
+.card span {
+  padding: 0 15px;
+}
+
+.card a {
+  text-decoration: none;
+}
+footer{
+  background: #4286f4;
+}
+footer li {
+  float: left;
+  list-style: none;
+  margin: 0 40px;
+  width: 50px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 20px;
+  text-align: center;
+  background: white;
+}
+/*# sourceMappingURL=style.css.map */

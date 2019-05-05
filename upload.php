@@ -119,7 +119,7 @@ if(isset($_GET['id'])){
 			    <label for="inputDesp">Description*</label>
 			    <textarea  class="form-control" id="inputDesp" name="inputDesp" rows="5" placeholder="Please enter property description here..." required> <?php echo (!empty($property)) ? $property['description'] :'' ?></textarea>
 			  </div>
-			  <button type="submit" class="btn btn-primary">Submit</button>
+			  <button type="submit" class="btn btn-primary" name="uploadProperty">Submit</button>
 			</form>
 		</div>
 
